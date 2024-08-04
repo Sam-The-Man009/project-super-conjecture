@@ -85,6 +85,7 @@
   environment.systemPackages = with pkgs; [
     # basic tools
     vim
+    nano
     git
     openssh
     gparted
