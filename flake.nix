@@ -1,5 +1,6 @@
 {
-  description = "Dynamic NixOS configuration for heterogeneous systems";
+  description = "Dynamic NixOS configuration distributior for heterogeneous systems, combining role-based defaults with host-specific customizations. For purposes of global domination and computing aggregation.";
+
 
   inputs = {
     # Nixpkgs: The Nix Packages collection.
