@@ -12,7 +12,7 @@
       ];
 
       types = {
-.
+
         master = { config, pkgs, ... }: {
           imports = import ./types/master/imports.nix { inherit config pkgs; };  
           homeManager = import ./types/master/home.nix;  
