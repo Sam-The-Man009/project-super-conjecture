@@ -24,7 +24,7 @@
         };
 
         user = { config, pkgs, ... }: {
-          imports = import ./types/user/imports.nix { inherit config pkgs; };  .
+          imports = import ./types/user/imports.nix { inherit config pkgs; };  
           homeManager = import ./types/user/home.nix;  
         };
       };
