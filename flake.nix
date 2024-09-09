@@ -46,7 +46,7 @@
         in
           {
             imports = [ hostType.imports ]; 
-            hostname = name;  
+            hostname = "${systemName}-${systemType}";  
 
             modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
 
