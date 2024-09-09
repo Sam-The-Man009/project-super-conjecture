@@ -32,14 +32,14 @@
       splitInput = input: let
         parts = builtins.split "-" input;  # Split input like "sysn-master" into ["sysn", "master"].
         systemName = builtins.head parts;  
-        systemType = builtins.getAttr 1 parts or "user";  
+        systemType = builtins.getAttr 1 parts // "user";  
       in { systemName = systemName; systemType = systemType; };
 
       
       generateConfigs = systemName: systemType: {
         name = "${systemName}-${systemType}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
         value = let
-          hostType = types.${systemType} or {
+          hostType = types.${systemType} // {
             imports = [];  
             homeManager = {};  
           };
