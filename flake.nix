@@ -53,7 +53,7 @@
           };
       };
 
-      builtins.trace "nixosConfigurations"
+      builtins.trace  = x: builtins.log x;
       nixosConfigurations = builtins.listToAttrs (
         builtins.concatMap (systemName:
           builtins.map (systemType: {
