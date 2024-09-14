@@ -64,9 +64,8 @@
   );
 
   # Debugging: trace the nixosConfigurations output
+  in {
       nixosConfigurations = nixosConfigurations;
-
-
-
+  };
 }
 
