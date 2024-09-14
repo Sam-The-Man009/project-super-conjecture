@@ -11,6 +11,7 @@
       system = "x86_64-linux";  # Specify your target system architecture
       pkgs = import nixpkgs { system = system; };
 
+      # Define system types with associated module imports
       types = {
         master = { config, pkgs, ... }: {
           imports = import ./types/master/imports.nix { inherit config pkgs; };
@@ -28,7 +29,7 @@
         };
       };
 
-      # Define a function to generate NixOS configurations
+      # Function to generate NixOS configurations
       generateConfig = systemName: systemType: {
         name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
         value = pkgs.lib.nixosSystem {
@@ -39,8 +40,13 @@
               hostname = "${systemName}-${systemType}";
               # Other default settings or configurations here
             })
-            (import ./types/${systemType}/imports.nix { inherit pkgs; })
-            (import ./types/${systemType}/home.nix)
+            (let
+              hostType = types.${systemType} { config = {}; pkgs = pkgs; };
+            in {
+              imports = [ hostType.imports ];
+              hostname = "${systemName}-${systemType}";
+              modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
+            })
           ];
           configuration = {
             # Additional configurations here if needed
