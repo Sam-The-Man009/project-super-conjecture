@@ -1,4 +1,5 @@
-{ description = "Dynamic NixOS configuration distributior for heterogeneous systems, combining role-based defaults with host-specific customizations. For purposes of global domination and computing aggregation.";
+{
+  description = "Dynamic NixOS configuration distributior for heterogeneous systems, combining role-based defaults with host-specific customizations. For purposes of global domination and computing aggregation.";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
@@ -12,17 +13,17 @@
 
       types = {
         master = { config, pkgs, ... }: {
-          imports = import ./types/master/imports.nix { inherit config pkgs; };  
+          imports = [ import ./types/master/imports.nix { inherit config pkgs; } ];  
           homeManager = import ./types/master/home.nix;  
         };
 
         node = { config, pkgs, ... }: {
-          imports = import ./types/node/imports.nix { inherit config pkgs; };  
+          imports = [ import ./types/node/imports.nix { inherit config pkgs; } ];  
           homeManager = import ./types/node/home.nix;  
         };
 
         user = { config, pkgs, ... }: {
-          imports = import ./types/user/imports.nix { inherit config pkgs; };  
+          imports = [ import ./types/user/imports.nix { inherit config pkgs; } ];  
           homeManager = import ./types/user/home.nix;  
         };
       };
@@ -38,9 +39,10 @@
           hostType = getTypeConfig systemType;
         in
           {
-            imports = [ hostType.imports ]; 
+            imports = [ hostType.imports ];
             hostname = "${systemName}-${systemType}";  
             modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
+            # Ensure 'config' is properly set or used if needed
           };
       };
 
