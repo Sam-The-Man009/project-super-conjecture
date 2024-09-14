@@ -1,5 +1,5 @@
 {
-  description = "My NixOS configuration flake";
+  description = "Dynamic NixOS configuration flake for heterogeneous systems.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -9,10 +9,32 @@
   outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";  # Specify your target system architecture
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs { system = system; };
 
+      # Function to generate a configuration for a given system name and type
+      generateConfig = systemName: systemType: {
+        name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
+        value = let
+          hostType = (pkgs.lib.getAttr systemType types) // {
+            imports = [];
+            homeManager = {};
+          };
+        in
+          {
+            imports = [ hostType.imports ];
+            hostname = "${systemName}-${systemType}";
+            modules = [
+              home-manager.nixosModules.home-manager
+              hostType.homeManager
+            ];
+          };
+      };
+
+      # Define system names and types
       systemNames = [
-        "sys1" "sys2" "sys3" "sys4" "sys5" "sys6" "sys7" "sys8" "sys9" "sys10" "sys11" "sys12" "sys13" "sys14" "sys15" "sys16" "sys17" "sys18" "sys19" "sys20" "sys21" "sys22" "sys23" "sys24" "sys25"
+        "sys1" "sys2" "sys3" "sys4" "sys5" "sys6" "sys7" "sys8" "sys9" "sys10"
+        "sys11" "sys12" "sys13" "sys14" "sys15" "sys16" "sys17" "sys18" "sys19"
+        "sys20" "sys21" "sys22" "sys23" "sys24" "sys25"
       ];
 
       types = {
@@ -32,40 +54,33 @@
         };
       };
 
-      # Define a function to generate NixOS configurations
-      generateConfig = systemName: systemType: {
-        # Ensure you are using the correct syntax for pkgs.nixosSystem
-        pkgs.nixosSystem {
-          system = "x86_64-linux";  # or your target system
-          modules = [
-            ({ config, pkgs, ... }: {
-              imports = [];
-              hostname = "${systemName}-${systemType}";
-              # Other default settings or configurations here
-            })
-            # Include your actual module files if needed
-            (let
-              hostType = types.${systemType} // {
-                imports = [];
-                homeManager = {};
-              };
-            in {
-              imports = [ hostType.imports ];
-              hostname = "${systemName}-${systemType}";
-              modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
-            })
-          ];
-        }
-      };
-
     in {
       nixosConfigurations = builtins.listToAttrs (
         builtins.concatMap (systemName:
           builtins.map (systemType: {
             name = "${systemName}-${systemType}";
-            value = generateConfig systemName systemType;
+            value = pkgs.lib.nixosSystem {
+              system = system;
+              modules = [
+                (import ./configuration.nix)
+                (import ./types/${systemType}/imports.nix { inherit pkgs; })
+                (import ./types/${systemType}/home.nix)
+              ];
+              configuration = {
+                # Add additional configurations here
+                networking.hostName = "${systemName}-${systemType}";
+              };
+            };
           }) (builtins.attrNames types)
         ) systemNames
+      );
+
+      # Default package for testing if nixosSystem is available
+      packages.x86_64-linux.default = pkgs.writeText "check-nixosSystem" (
+        if pkgs.lib.nixosSystem == null then
+          "nixosSystem not available"
+        else
+          "nixosSystem is available"
       );
     };
 }
