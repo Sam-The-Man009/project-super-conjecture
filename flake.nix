@@ -53,23 +53,23 @@
           };
       };
 
-      nixosConfigurations = builtins.listToAttrs (
-        builtins.map (systemName:
-          builtins.map (systemType: generateConfigs systemName systemType)
-          (builtins.attrNames types)
-        ) systemNames
-      );
-#      
-#
- #   in
-  #  {
-   #   nixosConfigurations = nixosConfigurations;
-    #};
-        # Debugging added here
-    debugOutput = builtins.trace "nixosConfigurations" nixosConfigurations;
+  # Generate the configurations
+  nixosConfigurations = builtins.listToAttrs (
+    builtins.concatMap (systemName:
+      builtins.map (systemType: {
+        name = "${systemName}-${systemType}";
+        value = generateConfigs systemName systemType;
+      }) (builtins.attrNames types)
+    ) systemNames
+  );
 
-    # Replaced final nixosConfigurations with debugOutput
-    nixosConfigurations = debugOutput;  # Return the debugged value.
+  # Debugging: trace the nixosConfigurations output
+      debugOutput = builtins.trace "nixosConfigurations" nixosConfigurations;
+    in {
+      # Return the traced configuration
+      nixosConfigurations = debugOutput;
+    };
+
 
 }
 
