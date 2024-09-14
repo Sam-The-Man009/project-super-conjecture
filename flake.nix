@@ -14,20 +14,18 @@
       # Function to generate a configuration for a given system name and type
       generateConfig = systemName: systemType: {
         name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
-        value = let
-          hostType = (pkgs.lib.getAttr systemType types) // {
-            imports = [];
-            homeManager = {};
+        value = pkgs.lib.nixosSystem {
+          system = system;
+          modules = [
+            (import ./configuration.nix)
+            (import ./types/${systemType}/imports.nix { inherit pkgs; })
+            (import ./types/${systemType}/home.nix)
+          ];
+          configuration = {
+            # Add additional configurations here
+            networking.hostName = "${systemName}-${systemType}";
           };
-        in
-          {
-            imports = [ hostType.imports ];
-            hostname = "${systemName}-${systemType}";
-            modules = [
-              home-manager.nixosModules.home-manager
-              hostType.homeManager
-            ];
-          };
+        };
       };
 
       # Define system names and types
@@ -63,8 +61,13 @@
           }) (builtins.attrNames types)
         ) systemNames
       );
+
+      # Default package for testing if nixosSystem is available
+      packages.x86_64-linux.default = pkgs.writeText "check-nixosSystem" (
+        if pkgs.lib.nixosSystem == null then
+          "nixosSystem not available"
+        else
+          "nixosSystem is available"
+      );
     };
-
-
 }
-
