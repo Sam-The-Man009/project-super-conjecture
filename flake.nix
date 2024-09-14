@@ -6,7 +6,7 @@
     home-manager.url = "github:nix-community/home-manager";
   };
 
-  outputs = { self, nixpkgs, home-manager, polypomo, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";  # Specify your target system architecture
       pkgs = import nixpkgs {
