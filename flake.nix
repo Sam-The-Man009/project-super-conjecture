@@ -13,7 +13,7 @@
 
       generateConfig = systemName: systemType: {
         name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
-        value = pkgs.lib.nixosSystem {
+        value = pkgs.nixosSystem {
           system = system;
           modules = [
             (import ./configuration.nix)
@@ -25,6 +25,8 @@
           };
         };
       };
+
+
 
       # Define system names and types
       systemNames = [
@@ -60,7 +62,6 @@
         ) systemNames
       );
 
-      # Default package for testing if nixosSystem is available
       packages.x86_64-linux.default = pkgs.writeText "check-nixosSystem" (
         if pkgs.lib.nixosSystem == null then
           "nixosSystem not available"
