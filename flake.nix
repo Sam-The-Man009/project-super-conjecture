@@ -12,9 +12,7 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [
-          polypomo.overlay
-        ];
+        
       };
 
       # Function to generate a configuration for a given system name and type
