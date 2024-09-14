@@ -1,4 +1,5 @@
-{ description = "Dynamic NixOS configuration distributior for heterogeneous systems, combining role-based defaults with host-specific customizations. For purposes of global domination and computing aggregation.";
+{
+  description = "Dynamic NixOS configuration distributior for heterogeneous systems, combining role-based defaults with host-specific customizations. For purposes of global domination and computing aggregation.";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
@@ -11,6 +12,7 @@
       ];
 
       types = {
+
         master = { config, pkgs, ... }: {
           imports = import ./types/master/imports.nix { inherit config pkgs; };  
           homeManager = import ./types/master/home.nix;  
@@ -27,33 +29,43 @@
         };
       };
 
-      getTypeConfig = systemType: types.${systemType} // {
-        imports = [];  
-        homeManager = {};  
-      };
+      splitInput = input: let
+        parts = builtins.split "-" input;  # Split input like "sysn-master" into ["sysn", "master"].
+        systemName = builtins.head parts;  
+        systemType = builtins.getAttr 1 parts // "user";  
+      in { systemName = systemName; systemType = systemType; };
 
+      
       generateConfigs = systemName: systemType: {
-        name = "${systemName}-${systemType}";  
+        name = "${systemName}-${systemType}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
         value = let
-          hostType = getTypeConfig systemType;
+          hostType = types.${systemType} // {
+            imports = [];  
+            homeManager = {};  
+          };
         in
           {
             imports = [ hostType.imports ]; 
             hostname = "${systemName}-${systemType}";  
+
             modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
+
           };
       };
 
-      nixosConfigurations = builtins.listToAttrs (
-        builtins.concatMap (systemName:
-          builtins.map (systemType: {
-            name = "${systemName}-${systemType}";
-            value = generateConfigs systemName systemType;
-          }) (builtins.attrNames types)
-        ) systemNames
-      );
+  # Generate the configurations
+  nixosConfigurations = builtins.listToAttrs (
+    builtins.concatMap (systemName:
+      builtins.map (systemType: {
+        name = "${systemName}-${systemType}";
+        value = generateConfigs systemName systemType;
+      }) (builtins.attrNames types)
+    ) systemNames
+  );
 
-    in {
+  # Debugging: trace the nixosConfigurations output
+  in {
       nixosConfigurations = nixosConfigurations;
-    };
+  };
 }
+
