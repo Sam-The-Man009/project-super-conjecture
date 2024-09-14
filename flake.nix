@@ -31,36 +31,22 @@
           homeManager = import ./types/user/home.nix;
         };
       };
+        generateConfigs = systemName: systemType: {
+                name = "${systemName}-${systemType}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
+                value = let
+                  hostType = types.${systemType} // {
+                    imports = [];  
+                    homeManager = {};  
+                  };
+                in
+                  {
+                    imports = [ hostType.imports ]; 
+                    hostname = "${systemName}-${systemType}";  
 
-      generateConfig = systemName: systemType: {
-        # Define the configuration for a specific systemName and systemType
-        pkgs.nixosSystem = {
-          system = "x86_64-linux";  # Specify your target system architecture
-          modules = [
-            # Minimal example to include in the configuration
-            ({ config, pkgs, ... }: {
-              imports = [
-                # Any necessary imports
-              ];
-              hostname = "${systemName}-${systemType}";
-              # Include any default settings or modules here
-              environment.systemPackages = with pkgs; [ wget vim ]; # Example
-            })
-            # Include your configuration files and modules
-            # You may need to adjust this based on your actual module paths
-            (let
-              hostType = types.${systemType} // {
-                imports = [];
-                homeManager = {};
+                    modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
+
+                  };
               };
-            in {
-              imports = [ hostType.imports ];
-              hostname = "${systemName}-${systemType}";
-              modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
-            })
-          ];
-        };
-      };
 
     in {
       nixosConfigurations = builtins.listToAttrs (
