@@ -64,12 +64,8 @@
   );
 
   # Debugging: trace the nixosConfigurations output
-      debugOutput = builtins.trace "nixosConfigurations: ${builtins.toJSON nixosConfigurations}" nixosConfigurations;
-    in {
-      # Return the traced configuration
       nixosConfigurations = nixosConfigurations;
 
-    };
 
 
 }
