@@ -26,7 +26,7 @@
       #  };
       #};
 generateConfig = systemName: systemType: {
-  pkgs.nixosSystem {
+  pkgs.nixosSystem = {
     system = "x86_64-linux";
     modules = [
       ({ config, pkgs, ... }: {
