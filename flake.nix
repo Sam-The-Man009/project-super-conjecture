@@ -1,6 +1,6 @@
 {
   description = "My NixOS configuration flake";
-  
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
@@ -31,22 +31,28 @@
           homeManager = import ./types/user/home.nix;
         };
       };
-        generateConfig = systemName: systemType: {
-                name = "${systemName}-${systemType}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
-                value = let
-                  hostType = types.${systemType} // {
-                    imports = [];  
-                    homeManager = {};  
-                  };
-                in
-                  {
-                    imports = [ hostType.imports ]; 
-                    hostname = "${systemName}-${systemType}";  
 
-                    modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
-
-                  };
-              };
+      generateConfig = systemName: systemType: pkgs.nixosSystem {
+        system = "x86_64-linux";  # or your target system
+        modules = [
+          ({ config, pkgs, ... }: {
+            imports = [];
+            hostname = "${systemName}-${systemType}";
+            # Other default settings or configurations here
+          })
+          # Include your actual module files if needed
+          (let
+            hostType = types.${systemType} // {
+              imports = [];
+              homeManager = {};
+            };
+          in {
+            imports = [ hostType.imports ];
+            hostname = "${systemName}-${systemType}";
+            modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
+          })
+        ];
+      };
 
     in {
       nixosConfigurations = builtins.listToAttrs (
