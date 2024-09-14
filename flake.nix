@@ -62,6 +62,9 @@
             value = generateConfig systemName systemType;
           }) (builtins.attrNames types)
         ) systemNames
-      );
+      )
+    };
+
 
 }
+
