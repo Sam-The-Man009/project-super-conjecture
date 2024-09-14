@@ -23,10 +23,14 @@
               # Basic configuration
               networking.hostName = "${systemName}-${systemType}";
             })
-            # Add more modules as needed
           ];
+          configuration = {
+            # Basic configuration
+            networking.hostName = "${systemName}-${systemType}";
+          };
         };
       };
+
 
 
       # Define system names and types
