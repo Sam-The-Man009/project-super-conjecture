@@ -11,20 +11,30 @@
       system = "x86_64-linux";  # Specify your target system architecture
       pkgs = import nixpkgs { system = system; };
 
-      generateConfig = systemName: systemType: {
-        name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
-        value = pkgs.nixosSystem {
-          system = system;
-          modules = [
-            #(import ./configuration.nix)
-            #(import ./types/${systemType}/imports.nix { inherit pkgs; })
-            #(import ./types/${systemType}/home.nix)
-          ];
-          configuration = {
-            #networking.hostName = "${systemName}-${systemType}";
-          };
-        };
-      };
+ #     generateConfig = systemName: systemType: {
+  #      name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
+   #     value = pkgs.nixosSystem {
+    #      system = system;
+     #     modules = [
+      #      #(import ./configuration.nix)
+#            #(import ./types/${systemType}/imports.nix { inherit pkgs; })
+ #           #(import ./types/${systemType}/home.nix)
+  #        ];
+   #       configuration = {
+    #        #networking.hostName = "${systemName}-${systemType}";
+     #     };
+      #  };
+      #};
+generateConfig = systemName: systemType: {
+  pkgs.nixosSystem {
+    system = "x86_64-linux";
+    modules = [
+      ({ config, pkgs, ... }: {
+        hostname = "${systemName}-${systemType}";
+      })
+    ];
+  };
+};
 
 
 
