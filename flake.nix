@@ -17,8 +17,8 @@
           system = system;
           modules = [
             (import ./configuration.nix)
-            (import ./types/${systemType}/imports.nix { inherit pkgs; })
-            (import ./types/${systemType}/home.nix)
+            #(import ./types/${systemType}/imports.nix { inherit pkgs; })
+            #(import ./types/${systemType}/home.nix)
           ];
           configuration = {
             networking.hostName = "${systemName}-${systemType}";
