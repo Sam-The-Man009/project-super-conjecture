@@ -72,3 +72,4 @@
     nixosConfigurations = debugOutput;  # Return the debugged value.
 
 }
+
