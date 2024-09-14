@@ -17,17 +17,17 @@
         value = pkgs.lib.nixosSystem {
           system = system;
           modules = [
-            (import ./configuration.nix)
-            (import ./types/${systemType}/imports.nix { inherit pkgs; })
-            (import ./types/${systemType}/home.nix)
+            ({ config, pkgs, ... }: {
+              imports = [];
+              hostname = "${systemName}-${systemType}";
+              # Basic configuration
+              networking.hostName = "${systemName}-${systemType}";
+            })
+            # Add more modules as needed
           ];
-          configuration = {
-            # Add additional configurations here
-            networking.hostName = "${systemName}-${systemType}";
-            # Any additional configuration settings can be included here
-          };
         };
       };
+
 
       # Define system names and types
       systemNames = [
