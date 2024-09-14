@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    polypomo.url = "github:polypomo/polypomo";  # Example URL for polypomo
   };
 
   outputs = { self, nixpkgs, home-manager, polypomo, ... }:
