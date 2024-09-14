@@ -71,5 +71,5 @@
     # Replaced final nixosConfigurations with debugOutput
     nixosConfigurations = debugOutput;  # Return the debugged value.
 
-#}
+};
 
