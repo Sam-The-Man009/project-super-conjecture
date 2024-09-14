@@ -34,12 +34,12 @@
         value = pkgs.lib.nixosSystem {
           system = system;
           modules = [
-            ({ config, pkgs, ... }: {
+            ({ pkgs, ... }: {
               imports = [];
               hostname = "${systemName}-${systemType}";
               # Other default settings or configurations here
             })
-            (import ./types/${systemType}/imports.nix { inherit config pkgs; })
+            (import ./types/${systemType}/imports.nix { inherit pkgs; })
             (import ./types/${systemType}/home.nix)
           ];
           configuration = {
