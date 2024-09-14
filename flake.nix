@@ -53,12 +53,12 @@
           };
       };
 
-#      nixosConfigurations = builtins.listToAttrs (
- #       builtins.map (systemName:
-  #        builtins.map (systemType: generateConfigs systemName systemType)
-   #       (builtins.attrNames types)
-    #    ) systemNames
-     # );
+      nixosConfigurations = builtins.listToAttrs (
+        builtins.map (systemName:
+          builtins.map (systemType: generateConfigs systemName systemType)
+          (builtins.attrNames types)
+        ) systemNames
+      );
 #      
 #
  #   in
@@ -71,5 +71,5 @@
     # Replaced final nixosConfigurations with debugOutput
     nixosConfigurations = debugOutput;  # Return the debugged value.
 
-};
+}
 
