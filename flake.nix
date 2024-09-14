@@ -8,7 +8,7 @@
 
   outputs = { self, nixpkgs, home-manager, ... }:
     let
-      system = "x86_64-linux";  # or your target system
+      system = "x86_64-linux";  # Specify your target system architecture
       pkgs = import nixpkgs { inherit system; };
 
       systemNames = [
@@ -16,30 +16,38 @@
       ];
 
       types = {
-
         master = { config, pkgs, ... }: {
-          imports = import ./types/master/imports.nix { inherit config pkgs; };  
-          homeManager = import ./types/master/home.nix;  
+          imports = import ./types/master/imports.nix { inherit config pkgs; };
+          homeManager = import ./types/master/home.nix;
         };
 
         node = { config, pkgs, ... }: {
-          imports = import ./types/node/imports.nix { inherit config pkgs; };  
-          homeManager = import ./types/node/home.nix;  
+          imports = import ./types/node/imports.nix { inherit config pkgs; };
+          homeManager = import ./types/node/home.nix;
         };
 
         user = { config, pkgs, ... }: {
-          imports = import ./types/user/imports.nix { inherit config pkgs; };  
-          homeManager = import ./types/user/home.nix;  
+          imports = import ./types/user/imports.nix { inherit config pkgs; };
+          homeManager = import ./types/user/home.nix;
         };
       };
 
       generateConfig = systemName: systemType: {
-        name = "${systemName}-${systemType}";
-        value = pkgs.nixosSystem {
-          system = "x86_64-linux";  # or your target system
+        # Define the configuration for a specific systemName and systemType
+        pkgs.nixosSystem {
+          system = "x86_64-linux";  # Specify your target system architecture
           modules = [
-            # Include your NixOS module paths here
-            ./configuration.nix
+            # Minimal example to include in the configuration
+            ({ config, pkgs, ... }: {
+              imports = [
+                # Any necessary imports
+              ];
+              hostname = "${systemName}-${systemType}";
+              # Include any default settings or modules here
+              environment.systemPackages = with pkgs; [ wget vim ]; # Example
+            })
+            # Include your configuration files and modules
+            # You may need to adjust this based on your actual module paths
             (let
               hostType = types.${systemType} // {
                 imports = [];
@@ -51,7 +59,7 @@
               modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
             })
           ];
-        };
+        }
       };
 
     in {
