@@ -13,22 +13,20 @@
 
       # Function to generate a configuration for a given system name and type
       generateConfig = systemName: systemType: {
-        name = "${systemName}-${systemType}";
+        name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
         value = pkgs.lib.nixosSystem {
           system = system;
           modules = [
-            ({ config, pkgs, ... }: {
-              imports = [];
-              networking.hostName = "${systemName}-${systemType}";
-            })
+            (import ./configuration.nix)
             (import ./types/${systemType}/imports.nix { inherit pkgs; })
             (import ./types/${systemType}/home.nix)
           ];
+          configuration = {
+            # Add additional configurations here
+            networking.hostName = "${systemName}-${systemType}";
+          };
         };
       };
-
-
-
 
       # Define system names and types
       systemNames = [
