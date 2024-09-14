@@ -68,6 +68,9 @@
     in {
       # Return the traced configuration
       nixosConfigurations = debugOutput;
+      packages.x86_64-linux = {};
+      legacyPackages.x86_64-linux = {};
+
     };
 
 
