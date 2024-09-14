@@ -34,7 +34,7 @@
 
       generateConfig = systemName: systemType: {
         # Define the configuration for a specific systemName and systemType
-        pkgs.nixosSystem {
+        pkgs.nixosSystem = {
           system = "x86_64-linux";  # Specify your target system architecture
           modules = [
             # Minimal example to include in the configuration
@@ -59,7 +59,7 @@
               modules = [ home-manager.nixosModules.home-manager hostType.homeManager ];
             })
           ];
-        }
+        };
       };
 
     in {
