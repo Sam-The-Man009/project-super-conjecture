@@ -31,7 +31,7 @@
           homeManager = import ./types/user/home.nix;
         };
       };
-        generateConfigs = systemName: systemType: {
+        generateConfig = systemName: systemType: {
                 name = "${systemName}-${systemType}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
                 value = let
                   hostType = types.${systemType} // {
