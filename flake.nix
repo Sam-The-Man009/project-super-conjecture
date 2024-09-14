@@ -4,12 +4,19 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
+    polypomo.url = "github:polypomo/polypomo";  # Example URL for polypomo
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, polypomo, ... }:
     let
       system = "x86_64-linux";  # Specify your target system architecture
-      pkgs = import nixpkgs { system = system; };
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [
+          polypomo.overlay
+        ];
+      };
 
       # Function to generate a configuration for a given system name and type
       generateConfig = systemName: systemType: {
