@@ -9,7 +9,11 @@
   outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";  # Specify your target system architecture
-      pkgs = import nixpkgs { system = system; };
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        
+      };
 
       # Function to generate a configuration for a given system name and type
       generateConfig = systemName: systemType: {
