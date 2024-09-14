@@ -16,12 +16,12 @@
         value = pkgs.nixosSystem {
           system = system;
           modules = [
-            (import ./configuration.nix)
+            #(import ./configuration.nix)
             #(import ./types/${systemType}/imports.nix { inherit pkgs; })
             #(import ./types/${systemType}/home.nix)
           ];
           configuration = {
-            networking.hostName = "${systemName}-${systemType}";
+            #networking.hostName = "${systemName}-${systemType}";
           };
         };
       };
