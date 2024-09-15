@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  system = builtins.currentSystem;
+  system = "x86_64-linux"; 
 
   # Retrieve the current username from the environment
   username = builtins.getEnv "USER";  # assumes the environment variable USER is set
@@ -35,7 +35,7 @@ let
   parts = builtins.split "-" username;
 
   # Check if the username is correctly split into two parts
-  _ = assert builtins.length parts == 2
+  _ = assert builtins.length parts == 2;
     "Username must be in the format 'systemName-systemType'.";
 
   systemName = builtins.elemAt parts 0;  # First part is systemName
