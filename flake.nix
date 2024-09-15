@@ -67,7 +67,7 @@ generateConfig = systemName: systemType: {
         builtins.concatMap (systemName:
           builtins.map (systemType: {
             name = "${systemName}-${systemType}";
-            value = generateConfig systemName systemType;
+           # value = generateConfig systemName systemType;
           }) (builtins.attrNames types)
         ) systemNames
       );
