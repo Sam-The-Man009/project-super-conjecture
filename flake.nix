@@ -71,12 +71,5 @@ generateConfig = systemName: systemType: {
           }) (builtins.attrNames types)
         ) systemNames
       );
-
-      packages.x86_64-linux.default = pkgs.writeText "check-nixosSystem" (
-        if pkgs.lib.nixosSystem == null then
-          "nixosSystem not available"
-        else
-          "nixosSystem is available"
-      );
-    };
+    }
 }
