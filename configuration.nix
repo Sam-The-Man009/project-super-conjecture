@@ -42,10 +42,10 @@ let
   systemType = builtins.elemAt parts 1;  # Second part is systemType
 
   # Assertions to validate that systemName and systemType are valid
-  _ = assert builtins.elem systemName systemNames;
+ systemNameAssertion = assert builtins.elem systemName systemNames;
     "Invalid systemName: ${systemName}. It must be one of ${systemNames}.";
-  
-  _ = assert builtins.hasAttr systemType types;
+
+  systemTypeAssertion = assert builtins.hasAttr systemType types;
     "Invalid systemType: ${systemType}. It must be one of ${builtins.attrNames types}.";
 
   # Generate the configuration based on systemName and systemType
