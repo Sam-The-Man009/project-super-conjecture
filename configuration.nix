@@ -51,9 +51,9 @@ let
   # Generate the configuration based on systemName and systemType
   generateConfig = {
     imports = [
-      ./common.nix
-      ./types/${systemType}/imports.nix
-      ./types/${systemType}/home.nix
+      #./common.nix
+      #./types/${systemType}/imports.nix
+      #./types/${systemType}/home.nix
     ];
 
     hostname = "${systemName}-${systemType}";
