@@ -8,12 +8,13 @@
 
   outputs = { self, nixpkgs, home-manager, ... }: let
     systemArchitechture = "x86_64-linux";
-    pkgs = import nixpkgs { system = systemArchitechture; };
+    # pkgs = import nixpkgs { system = systemArchitechture; };
+    lib = nixpkgs.lib;  
 
     # Function to generate configuration for a specific system and its type
     generateConfig = system: {
       name = "${system.name}-${system.type}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
-      value = pkgs.nixosSystem {
+      value = lib.nixosSystem {  
         system = system.Architechture;
         modules = [
           (import ./common.nix)
@@ -53,7 +54,7 @@
     # Filter the system list to find the matching system or default to 'sysDefault'
     matchingSystem = builtins.head (builtins.filter (system:
       system.name == getCurrentSystem
-    ) systems) || (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
+    ) systems) or (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
 
   in {
     nixosConfigurations = {
