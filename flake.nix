@@ -53,7 +53,7 @@
     # Filter the system list to find the matching system or default to 'sysDefault'
     matchingSystem = builtins.head (builtins.filter (system:
       system.name == getCurrentSystem
-    ) systems) or (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
+    ) systems) || (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
 
   in {
     nixosConfigurations = {
