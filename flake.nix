@@ -47,12 +47,13 @@
     ];
 
 
-    getCurrentSystem = builtins.getEnv "SYSTEM_NAME" or "sysDefault";  # Default to 'sysDefault'
+    getCurrentSystem = builtins.getEnv "SYSTEM_NAME"; 
+    getCurrentSystem = if (getCurrentSystem != "") then getCurrentSystem else "sysDefault";
 
 
     matchingSystem = builtins.head (builtins.filter (system:
       system.name == getCurrentSystem
-    ) systems) or (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
+    ) systems) || (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
 
   in {
     nixosConfigurations = {
