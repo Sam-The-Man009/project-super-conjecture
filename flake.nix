@@ -23,7 +23,6 @@
 
           ({ config, pkgs, ... }: {
           imports = [];
-          environment = environment;
           hostname = "${system.name}";
           networking.hostName = "${system.name}";
           })
