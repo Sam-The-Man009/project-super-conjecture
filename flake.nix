@@ -10,7 +10,7 @@
     systemArchitecture = "x86_64-linux";
     pkgs = import nixpkgs { system = systemArchitecture; };
     lib = nixpkgs.lib;
-    config = {};
+    config = import ./common.nix { inherit pkgs; };
 
     # Function to generate configuration for a specific system and its type
     generateConfig = config: system: {
@@ -18,22 +18,18 @@
       value = lib.nixosSystem {
         system = system.Architecture;
         modules = [
-          (import ./common.nix { inherit config pkgs; })
           (import ./types/${system.type}/imports.nix { inherit config pkgs; })
           (import ./types/${system.type}/home.nix { inherit config pkgs; })
 
-          # is this the anonymous lambda?
-          ({ config, pkgs, ... }: {
-            imports = [];
+          {
             hostname = "${system.name}";
             networking.hostName = "${system.name}";
-          })
+          }
         ];
       };
     };
 
-
-  systems = [
+    systems = [
     { name = "sysDefault"; type = "user"; Architecture = "x86_64-linux"; }
     { name = "sys1"; type = "node"; Architecture = "x86_64-linux"; }
     { name = "sys2"; type = "node"; Architecture = "x86_64-linux"; }
@@ -61,7 +57,6 @@
     { name = "sys24"; type = "node"; Architecture = "x86_64-linux"; }
     { name = "sys25"; type = "master"; Architecture = "x86_64-linux"; }
   ];
-
 
     # Get the current system name from the environment or default to 'sysDefault'
     getCurrentSystem = let
