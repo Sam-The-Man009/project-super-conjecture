@@ -8,7 +8,6 @@
   ];
     
    
-  time.timeZone = "Europe/Berlin";  # Add other required settings
   networking.networkmanager.enable = true;
   time.timeZone = lib.mkDefault "Europe/Copenhagen";  
   i18n.defaultLocale = "en_DK.UTF-8";

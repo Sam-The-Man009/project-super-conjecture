@@ -1,5 +1,5 @@
 {
-  description = "Dynamic NixOS configuration flake for heterogeneous systems.";
+  description = "Dynamic NixOS configuration distributior for heterogeneous systems, combining role-based defaults with host-specific customizations. For purposes of global domination and computing aggregation.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
