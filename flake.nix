@@ -12,7 +12,7 @@
     lib = nixpkgs.lib;
 
     # Function to generate configuration for a specific system and its type
-    generateConfig = system: {
+    generateConfig = {system, ...}: {
       name = "${system.name}-${system.type}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
       value = lib.nixosSystem {
         system = system.Architechture;
