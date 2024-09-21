@@ -18,7 +18,6 @@
         modules = [
           (import ./common.nix)
 
-
           (import ./types/${system.type}/imports.nix { inherit pkgs; })
           (import ./types/${system.type}/home.nix)
 
@@ -30,7 +29,6 @@
         ];
       };
     };
-
 
     systems = [
       { name = "sysDefault"; type = "user"; Architechture = "x86_64-linux"; }
@@ -46,14 +44,16 @@
       { name = "sys10"; type = "master"; Architechture = "x86_64-linux"; }
     ];
 
+    # Get the current system name from the environment or default to 'sysDefault'
+    getCurrentSystem = let
+      envValue = builtins.getEnv "SYSTEM_NAME";
+    in
+      if envValue != "" then envValue else "sysDefault"; 
 
-    getCurrentSystem = builtins.getEnv "SYSTEM_NAME"; 
-    getCurrentSystem = if (getCurrentSystem != "") then getCurrentSystem else "sysDefault";
-
-
+    # Filter the system list to find the matching system or default to 'sysDefault'
     matchingSystem = builtins.head (builtins.filter (system:
       system.name == getCurrentSystem
-    ) systems) || (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
+    ) systems) or (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
 
   in {
     nixosConfigurations = {
