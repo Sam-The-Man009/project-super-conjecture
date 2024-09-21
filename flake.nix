@@ -8,7 +8,7 @@
 
   outputs = { self, nixpkgs, home-manager, ... }: let
     systemArchitechture = "x86_64-linux";
-    # pkgs = import nixpkgs { system = systemArchitechture; };
+    pkgs = import nixpkgs { system = systemArchitechture; };
     lib = nixpkgs.lib;  
 
     # Function to generate configuration for a specific system and its type
