@@ -1,4 +1,4 @@
-{ pkgs, environment, ... }:
+{ config, pkgs, environment, ... }:
 {
 environment.systemPackages = with pkgs; [
     # basic tools
