@@ -22,10 +22,13 @@
           (import ./types/${system.type}/imports.nix { inherit config pkgs environment; })
           (import ./types/${system.type}/home.nix { inherit config pkgs environment; })
 
-          {
-            hostname = "${system.name}";
-            networking.hostName = "${system.name}";
-          }
+          ({ config, pkgs, environment, ... }: {
+          imports = [];
+          environment = environment;
+          hostname = "${system.name}";
+          networking.hostName = "${system.name}";
+          })
+
         ];
       };
     };
