@@ -1,5 +1,5 @@
 {
-  description = "Dynamic NixOS configuration distributior for heterogeneous systems, combining role-based defaults with host-specific customizations. For purposes of global domination and computing aggregation.";
+  description = "Dynamic NixOS configuration distributor for heterogeneous systems, combining role-based defaults with host-specific customizations.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -9,12 +9,12 @@
   outputs = { self, nixpkgs, home-manager, ... }: let
     systemArchitechture = "x86_64-linux";
     pkgs = import nixpkgs { system = systemArchitechture; };
-    lib = nixpkgs.lib;  
+    lib = nixpkgs.lib;
 
     # Function to generate configuration for a specific system and its type
     generateConfig = system: {
       name = "${system.name}-${system.type}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
-      value = lib.nixosSystem {  
+      value = lib.nixosSystem {
         system = system.Architechture;
         modules = [
           (import ./common.nix)
@@ -49,12 +49,15 @@
     getCurrentSystem = let
       envValue = builtins.getEnv "SYSTEM_NAME";
     in
-      if envValue != "" then envValue else "sysDefault"; 
+      if envValue != "" then envValue else "sysDefault";
 
     # Filter the system list to find the matching system or default to 'sysDefault'
-    matchingSystem = builtins.head (builtins.filter (system:
-      system.name == getCurrentSystem
-    ) systems) || (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
+    matchingSystem = let
+      filteredSystems = builtins.filter (system: system.name == getCurrentSystem) systems;
+    in
+if builtins.length filteredSystems != [] 
+then builtins.head filteredSystems 
+else builtins.head (builtins.filter (system: system.name == "sysDefault") systems);
 
   in {
     nixosConfigurations = {
