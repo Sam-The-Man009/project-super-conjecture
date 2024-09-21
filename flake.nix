@@ -7,17 +7,20 @@
   };
 
   outputs = { self, nixpkgs, home-manager, ... }: let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs { system = system; };
+
 
     # Function to generate configuration for a specific system and its type
     generateConfig = system: {
-      pkgs = import nixpkgs { system = system.system; };
+      
       name = "${system.name}-${system.type}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
       value = pkgs.nixosSystem {
         system = system.system; 
         modules = [
           (import ./common.nix)
 
-          # Import system type-specific configurations
+          
           (import ./types/${system.type}/imports.nix { inherit pkgs; })
           (import ./types/${system.type}/home.nix)
 
