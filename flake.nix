@@ -17,10 +17,10 @@
       value = lib.nixosSystem {
         system = system.Architechture;
         modules = [
-          (import ./common.nix)
+          (import ./common.nix { inherit config pkgs; })  
 
-          (import ./types/${system.type}/imports.nix { inherit pkgs; })
-          (import ./types/${system.type}/home.nix)
+          (import ./types/${system.type}/imports.nix { inherit config pkgs; })  
+          (import ./types/${system.type}/home.nix { inherit config pkgs; })  
 
           ({ config, pkgs, ... }: {
             imports = [];

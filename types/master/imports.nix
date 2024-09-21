@@ -1,9 +1,8 @@
 { config, pkgs, ... }:
+
 {
   imports = [
-    ./pkgs.nix
-    #./services.nix
+    (import ./pkgs.nix { inherit config pkgs; })
+    (import ./services.nix { inherit config pkgs; })
   ];
-    
-  
 }
