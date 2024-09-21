@@ -7,59 +7,56 @@
   };
 
   outputs = { self, nixpkgs, home-manager, ... }: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs { system = system; };
-
+    systemArchitechture = "x86_64-linux";
+    pkgs = import nixpkgs { system = systemArchitechture; };
 
     # Function to generate configuration for a specific system and its type
     generateConfig = system: {
-      
       name = "${system.name}-${system.type}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
       value = pkgs.nixosSystem {
-        system = system.system; 
+        system = system.Architechture;
         modules = [
           (import ./common.nix)
 
-          
+
           (import ./types/${system.type}/imports.nix { inherit pkgs; })
           (import ./types/${system.type}/home.nix)
 
           ({ config, pkgs, ... }: {
-              imports = [];
-              hostname = "${system.name}";
-              networking.hostName = "${system.name}";
+            imports = [];
+            hostname = "${system.name}";
+            networking.hostName = "${system.name}";
           })
         ];
       };
     };
 
+
     systems = [
-      { name = "sysDefault"; type = "user"; system = "x86_64-linux"; }
-      { name = "sys1"; type = "master"; system = "x86_64-linux"; }
-      { name = "sys2"; type = "node"; system = "x86_64-linux"; }
-      { name = "sys3"; type = "node"; system = "x86_64-linux"; }
-      { name = "sys4"; type = "node"; system = "x86_64-linux"; }
-      { name = "sys5"; type = "master"; system = "x86_64-linux"; }
-      { name = "sys6"; type = "node"; system = "x86_64-linux"; }
-      { name = "sys7"; type = "node"; system = "x86_64-linux"; }
-      { name = "sys8"; type = "node"; system = "x86_64-linux"; }
-      { name = "sys9"; type = "node"; system = "x86_64-linux"; }
-      { name = "sys10"; type = "master"; system = "x86_64-linux"; }
+      { name = "sysDefault"; type = "user"; Architechture = "x86_64-linux"; }
+      { name = "sys1"; type = "master"; Architechture = "x86_64-linux"; }
+      { name = "sys2"; type = "node"; Architechture = "x86_64-linux"; }
+      { name = "sys3"; type = "node"; Architechture = "x86_64-linux"; }
+      { name = "sys4"; type = "node"; Architechture = "x86_64-linux"; }
+      { name = "sys5"; type = "master"; Architechture = "x86_64-linux"; }
+      { name = "sys6"; type = "node"; Architechture = "x86_64-linux"; }
+      { name = "sys7"; type = "node"; Architechture = "x86_64-linux"; }
+      { name = "sys8"; type = "node"; Architechture = "x86_64-linux"; }
+      { name = "sys9"; type = "node"; Architechture = "x86_64-linux"; }
+      { name = "sys10"; type = "master"; Architechture = "x86_64-linux"; }
     ];
 
-    # Function to get the current system name, assuming an environment variable
-    getCurrentSystem = builtins.getEnv "SYSTEM_NAME";  
 
-    # Filter the system list to match the current system
+    getCurrentSystem = builtins.getEnv "SYSTEM_NAME" or "sysDefault";  # Default to 'sysDefault'
+
+
     matchingSystem = builtins.head (builtins.filter (system:
       system.name == getCurrentSystem
-    ) systems);
+    ) systems) or (builtins.head (builtins.filter (system: system.name == "sysDefault") systems));
 
   in {
-    nixosConfigurations = if matchingSystem != null then {
+    nixosConfigurations = {
       inherit (generateConfig matchingSystem) value;
-    } else {
-      throw = "Current system '${getCurrentSystem}' is not defined in the system list. Please add it to the 'systems' list using \'export SYSTEM_NAME=sysDefault\'.";
     };
   };
 }
