@@ -58,7 +58,7 @@
 
   in {
     nixosConfigurations = {
-      inherit (generateConfig matchingSystem) value;
+      "${matchingSystem.name}" = (generateConfig matchingSystem).value;
     };
   };
 }
