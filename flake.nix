@@ -6,68 +6,56 @@
     home-manager.url = "github:nix-community/home-manager";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
-    let
-      system = "x86_64-linux";  # Specify your target system architecture
-      pkgs = import nixpkgs { system = system; };
+  outputs = { self, nixpkgs, home-manager, ... }: let
 
-      generateConfig = systemName: systemType: {
-        name = "${systemName}-${systemType}";  # Construct a key like "sys1-user"
-        value = pkgs.nixosSystem {
-          system = system;
-          modules = [
-            (import ./common.nix)
-            
+    # Function to generate configuration for a specific system and its type
+    generateConfig = system: {
+      name = "${system.name}-${system.type}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
+      value = pkgs.nixosSystem {
+        system = system.system; 
+        modules = [
+          (import ./common.nix)
 
-            (import ./types/${systemType}/imports.nix { inherit pkgs; })
-            (import ./types/${systemType}/home.nix)
+          # Import system type-specific configurations
+          (import ./types/${system.type}/imports.nix { inherit pkgs; })
+          (import ./types/${system.type}/home.nix)
 
-            ({ config, pkgs, ... }: {
-                imports = [];
-                hostname = "${systemName}-${systemType}";
-                networking.hostName = "${systemName}-${systemType}";
-
-
-              })
-          ];
-        };
+          ({ config, pkgs, ... }: {
+              imports = [];
+              hostname = "${system.name}";
+              networking.hostName = "${system.name}";
+          })
+        ];
       };
-
-
-
-
-      # Define system names and types
-      systemNames = [
-        "sys1" "sys2" "sys3" "sys4" "sys5" "sys6" "sys7" "sys8" "sys9" "sys10"
-        "sys11" "sys12" "sys13" "sys14" "sys15" "sys16" "sys17" "sys18" "sys19"
-        "sys20" "sys21" "sys22" "sys23" "sys24" "sys25"
-      ];
-
-      types = {
-        master = { config, pkgs, ... }: {
-          imports = import ./types/master/imports.nix { inherit config pkgs; };
-          homeManager = import ./types/master/home.nix;
-        };
-
-        node = { config, pkgs, ... }: {
-          imports = import ./types/node/imports.nix { inherit config pkgs; };
-          homeManager = import ./types/node/home.nix;
-        };
-
-        user = { config, pkgs, ... }: {
-          imports = import ./types/user/imports.nix { inherit config pkgs; };
-          homeManager = import ./types/user/home.nix;
-        };
-      };
-
-    in {
-      nixosConfigurations = builtins.listToAttrs (
-        builtins.concatMap (systemName:
-          builtins.map (systemType: {
-            name = "${systemName}-${systemType}";
-            value = generateConfig systemName systemType;
-          }) (builtins.attrNames types)
-        ) systemNames
-      );
     };
+
+    systems = [
+      { name = "sysDefault"; type = "user"; system = "x86_64-linux"; }
+      { name = "sys1"; type = "master"; system = "x86_64-linux"; }
+      { name = "sys2"; type = "node"; system = "x86_64-linux"; }
+      { name = "sys3"; type = "node"; system = "x86_64-linux"; }
+      { name = "sys4"; type = "node"; system = "x86_64-linux"; }
+      { name = "sys5"; type = "master"; system = "x86_64-linux"; }
+      { name = "sys6"; type = "node"; system = "x86_64-linux"; }
+      { name = "sys7"; type = "node"; system = "x86_64-linux"; }
+      { name = "sys8"; type = "node"; system = "x86_64-linux"; }
+      { name = "sys9"; type = "node"; system = "x86_64-linux"; }
+      { name = "sys10"; type = "master"; system = "x86_64-linux"; }
+    ];
+
+    # Function to get the current system name, assuming an environment variable
+    getCurrentSystem = builtins.getEnv "SYSTEM_NAME";  
+
+    # Filter the system list to match the current system
+    matchingSystem = builtins.head (builtins.filter (system:
+      system.name == getCurrentSystem
+    ) systems);
+
+  in {
+    nixosConfigurations = if matchingSystem != null then {
+      inherit (generateConfig matchingSystem) value;
+    } else {
+      throw = "Current system '${getCurrentSystem}' is not defined in the system list. Please add it to the 'systems' list using \'export SYSTEM_NAME=sysDefault\'.";
+    };
+  };
 }
