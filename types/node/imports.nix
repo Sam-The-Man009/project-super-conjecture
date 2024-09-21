@@ -2,7 +2,7 @@
 {
   imports = [
     ./pkgs.nix
-    ./services.nix
+    #./services.nix
   ];
     
   

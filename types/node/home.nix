@@ -3,7 +3,7 @@
   # Define the home manager profile for master host
   home.profile = { ... }: {
     # Create the /home/user directory if it doesn't exist
-    home.homeDirectory = "/home/user";
+    home.homeDirectory = "/home/node";
 
     # Install some packages specific to the master host
     home.packages = [ pkgs.git pkgs.zsh ];
@@ -11,7 +11,7 @@
     # Set up the shell to use zsh and enable some features
     programs.zsh = {
     enable = true;
-    sessionInit = "source /home/user/.zshrc";
+    sessionInit = "source ${home.homeDirectory}/.zshrc";
     aliases = {
       sys-rebuild = "sudo nixos-rebuild switch --flake /path/to/nixos-config#denmarkWest"; # gotta put in the path at some point
       home-rebuild = "sudo home-manager --flake /path/to/home-manifest#denmarkWest switch";
