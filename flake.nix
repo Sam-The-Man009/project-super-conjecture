@@ -9,7 +9,6 @@
   outputs = { self, nixpkgs, home-manager, ... }: let
     systemArchitecture = "x86_64-linux";
     pkgs = import nixpkgs { system = systemArchitecture; };
-    environment = {};
     lib = nixpkgs.lib;
     config = import ./common.nix { inherit pkgs; };
 
@@ -19,10 +18,10 @@
       value = lib.nixosSystem {
         system = system.Architecture;
         modules = [
-          (import ./types/${system.type}/imports.nix { inherit config pkgs environment; })
-          (import ./types/${system.type}/home.nix { inherit config pkgs environment; })
+          (import ./types/${system.type}/imports.nix { inherit config pkgs; })
+          (import ./types/${system.type}/home.nix { inherit config pkgs; })
 
-          ({ config, pkgs, environment, ... }: {
+          ({ config, pkgs, ... }: {
           imports = [];
           environment = environment;
           hostname = "${system.name}";
