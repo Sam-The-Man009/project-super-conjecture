@@ -10,6 +10,7 @@
 
     # Function to generate configuration for a specific system and its type
     generateConfig = system: {
+      pkgs = import nixpkgs { system = system.system; };
       name = "${system.name}-${system.type}";  # Construct a key like "sys1-user". following the naming convention "sys-type"
       value = pkgs.nixosSystem {
         system = system.system; 
