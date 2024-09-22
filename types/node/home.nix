@@ -30,9 +30,9 @@
     };
 
     # Define the content of .zshrc file
-    systemd.user.zshrc = mkIf (fileExists "/home/user/.zshrc") ''
-      echo 'export EDITOR="nvim"' > /home/user/.zshrc
-      echo 'export PATH=$PATH:$HOME/.local/bin' >> /home/user/.zshrc
-    '';
+    # systemd.user.zshrc = mkIf (fileExists "/home/user/.zshrc") ''
+    #   echo 'export EDITOR="nvim"' > /home/user/.zshrc
+    #   echo 'export PATH=$PATH:$HOME/.local/bin' >> /home/user/.zshrc
+    # '';
   };
 }

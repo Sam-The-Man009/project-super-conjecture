@@ -10,7 +10,7 @@
     systemArchitecture = "x86_64-linux";
     pkgs = import nixpkgs { system = systemArchitecture; };
     lib = nixpkgs.lib;
-    config = import ./common.nix { inherit pkgs; };
+    config = import ./common.nix { inherit pkgs lib; };
 
     # Function to generate configuration for a specific system and its type
     generateConfig = config: system: {
@@ -18,8 +18,8 @@
       value = lib.nixosSystem {
         system = system.Architecture;
         modules = [
-          (import ./types/${system.type}/imports.nix { inherit config pkgs; })
-          (import ./types/${system.type}/home.nix { inherit config pkgs; })
+          (import ./types/${system.type}/imports.nix { inherit config pkgs lib; })
+          (import ./types/${system.type}/home.nix { inherit config pkgs lib; })
 
           ({ config, pkgs, ... }: {
           imports = [];
@@ -31,7 +31,8 @@
       };
     };
 
-    systems = [
+
+      systems = [
     { name = "sysDefault"; type = "user"; Architecture = "x86_64-linux"; }
     { name = "sys1"; type = "node"; Architecture = "x86_64-linux"; }
     { name = "sys2"; type = "node"; Architecture = "x86_64-linux"; }
@@ -76,7 +77,7 @@
 
   in {
     nixosConfigurations = {
-      "${matchingSystem.name}" = (generateConfig config matchingSystem).value;
+      "${matchingSystem.name}" = (generateConfig matchingSystem).value;
     };
   };
 }
