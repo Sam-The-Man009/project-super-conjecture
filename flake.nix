@@ -17,18 +17,25 @@
       name = "${system.name}-${system.type}";
       value = lib.nixosSystem {
         system = system.Architecture;
+
+        
         modules = [
+          
           # Import Home Manager's NixOS module
           home-manager.nixosModules.home-manager
 
           (import ./types/${system.type}/imports.nix { inherit config pkgs lib; })
-          (import ./types/${system.type}/home.nix { inherit config pkgs lib; })
+          
 
           ({ config, pkgs, ... }: {
             imports = [];
             hostname = "${system.name}";
             networking.hostName = "${system.name}";
           })
+          
+        ];
+        nixosModules = [
+          (import ./types/${system.type}/home.nix { inherit config pkgs lib; })
         ];
       };
     };
