@@ -18,6 +18,7 @@
       value = lib.nixosSystem {
         system = system.Architecture;
         modules = [
+          
           (import ./types/${system.type}/imports.nix { inherit config pkgs lib; })
           (import ./types/${system.type}/home.nix { inherit config pkgs lib; })
 
@@ -27,16 +28,15 @@
             networking.hostName = "${system.name}";
 
 
-                      # Import Home Manager's NixOS module
-          home-manager.nixosModules.home-manager
-          
-
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${system.name} = { 
-              home.stateVersion = "23.05"; 
-              programs.home-manager.enable = true;
-            };
+            home-manager.nixosModules.home-manager.enable = true;
+            home-manager{
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${system.name} = { 
+                home.stateVersion = "23.05"; 
+                programs.home-manager.enable = true;
+              };
+            }
           })
         ];
       };
