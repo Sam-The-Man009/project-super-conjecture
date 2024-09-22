@@ -13,7 +13,7 @@
     config = import ./common.nix { inherit pkgs lib; };
 
     # Function to generate configuration for a specific system and its type
-    generateConfig = config: system: {
+    generateConfig = system: config: {
       name = "${system.name}-${system.type}";
       value = lib.nixosSystem {
         system = system.Architecture;
@@ -22,44 +22,42 @@
           (import ./types/${system.type}/home.nix { inherit config pkgs lib; })
 
           ({ config, pkgs, ... }: {
-          imports = [];
-          hostname = "${system.name}";
-          networking.hostName = "${system.name}";
+            imports = [];
+            hostname = "${system.name}";
+            networking.hostName = "${system.name}";
           })
-
         ];
       };
     };
 
-
-      systems = [
-    { name = "sysDefault"; type = "user"; Architecture = "x86_64-linux"; }
-    { name = "sys1"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys2"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys3"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys4"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys5"; type = "master"; Architecture = "x86_64-linux"; }
-    { name = "sys6"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys7"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys8"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys9"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys10"; type = "master"; Architecture = "x86_64-linux"; }
-    { name = "sys11"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys12"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys13"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys14"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys15"; type = "master"; Architecture = "x86_64-linux"; }
-    { name = "sys16"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys17"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys18"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys19"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys20"; type = "master"; Architecture = "x86_64-linux"; }
-    { name = "sys21"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys22"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys23"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys24"; type = "node"; Architecture = "x86_64-linux"; }
-    { name = "sys25"; type = "master"; Architecture = "x86_64-linux"; }
-  ];
+    systems = [
+      { name = "sysDefault"; type = "user"; Architecture = "x86_64-linux"; }
+      { name = "sys1"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys2"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys3"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys4"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys5"; type = "master"; Architecture = "x86_64-linux"; }
+      { name = "sys6"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys7"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys8"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys9"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys10"; type = "master"; Architecture = "x86_64-linux"; }
+      { name = "sys11"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys12"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys13"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys14"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys15"; type = "master"; Architecture = "x86_64-linux"; }
+      { name = "sys16"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys17"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys18"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys19"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys20"; type = "master"; Architecture = "x86_64-linux"; }
+      { name = "sys21"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys22"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys23"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys24"; type = "node"; Architecture = "x86_64-linux"; }
+      { name = "sys25"; type = "master"; Architecture = "x86_64-linux"; }
+    ];
 
     # Get the current system name from the environment or default to 'sysDefault'
     getCurrentSystem = let
@@ -77,7 +75,7 @@
 
   in {
     nixosConfigurations = {
-      "${matchingSystem.name}" = (generateConfig matchingSystem).value;
+      "${matchingSystem.name}" = (generateConfig matchingSystem config).value;
     };
   };
 }
