@@ -29,14 +29,14 @@
 
 
             home-manager.nixosModules.home-manager.enable = true;
-            home-manager{
+            home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
               users.${system.name} = { 
                 home.stateVersion = "23.05"; 
                 programs.home-manager.enable = true;
               };
-            }
+            };
           })
         ];
       };
