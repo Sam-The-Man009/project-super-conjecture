@@ -1,10 +1,16 @@
 { pkgs, config, inputs, ... }: {
+  
 
   homeManager.users.master = {
-    home.homeDirectory = "/home/master";
-    home.packages = home.packages;
-
-    home.packages = [ pkgs.git pkgs.zsh ];
+    home = {
+    homeDirectory = "/home/master";
+    packages = [ 
+      pkgs.git
+      pkgs.zsh
+    ];
+    username = "master";
+  };
+    
 
     programs.zsh = {
       enable = true;

@@ -1,8 +1,14 @@
 { pkgs, config, inputs, ... }: {
 
   homeManager.users.user = {
-    home.homeDirectory = "/home/user";
-    home.packages = home.packages;
+    home = {
+    homeDirectory = "/home/user";
+    packages = [ 
+      pkgs.git
+      pkgs.zsh
+    ];
+    username = "user";
+  };
 
     home.packages = [ pkgs.git pkgs.zsh ];
 

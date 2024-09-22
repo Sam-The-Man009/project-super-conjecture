@@ -1,10 +1,15 @@
 { pkgs, config, inputs, ... }: {
 
   homeManager.users.node = {
-    home.homeDirectory = "/home/node";
-    home.packages = home.packages;
+    home = {
+    homeDirectory = "/home/node";
+    packages = [ 
+      pkgs.git
+      pkgs.zsh
+    ];
+    username = "node";
+  };
 
-    home.packages = [ pkgs.git pkgs.zsh ];
 
     programs.zsh = {
       enable = true;
