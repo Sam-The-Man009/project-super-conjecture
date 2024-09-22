@@ -18,22 +18,24 @@
       value = lib.nixosSystem {
         system = system.Architecture;
         modules = [
-          
+
           (import ./types/${system.type}/imports.nix { inherit config pkgs lib; })
           (import ./types/${system.type}/home.nix { inherit config pkgs lib; })
 
+
+          home-manager.nixosModules.home-manager
+
+
           ({ config, pkgs, ... }: {
-            imports = [];
             hostname = "${system.name}";
             networking.hostName = "${system.name}";
 
 
-            home-manager.nixosModules.home-manager.enable = true;
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.${system.name} = { 
-                home.stateVersion = "23.05"; 
+              users.${system.name} = {
+                home.stateVersion = "23.05";  
                 programs.home-manager.enable = true;
               };
             };
@@ -81,8 +83,8 @@
     matchingSystem = let
       filteredSystems = builtins.filter (system: system.name == getCurrentSystem) systems;
     in
-      if builtins.length filteredSystems != [] 
-      then builtins.head filteredSystems 
+      if builtins.length filteredSystems != 0
+      then builtins.head filteredSystems
       else builtins.head (builtins.filter (system: system.name == "sysDefault") systems);
 
   in {
