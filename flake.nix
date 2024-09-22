@@ -18,9 +18,8 @@
       value = lib.nixosSystem {
         system = system.Architecture;
         modules = [
-
-
           (import ./types/${system.type}/imports.nix { inherit config pkgs lib; })
+          (import ./types/${system.type}/home.nix { inherit config pkgs lib; })
 
           ({ config, pkgs, ... }: {
             imports = [];
@@ -29,7 +28,8 @@
 
 
                       # Import Home Manager's NixOS module
-          home-manager.nixosModules.home-manager = (import ./types/${system.type}/home.nix { inherit config pkgs lib; });
+          home-manager.nixosModules.home-manager
+          
 
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
