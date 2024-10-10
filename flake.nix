@@ -14,7 +14,7 @@
     systemArchitecture = "x86_64-linux";
     pkgs = import nixpkgs { system = systemArchitecture; };
     lib = nixpkgs.lib;
-    config = import ./common.nix { inherit pkgs lib outputs; };
+    config = import ./common.nix { inherit pkgs lib inputs; };
 
     # Function to generate configuration for a specific system and its type
     generateConfig = system: config: {
