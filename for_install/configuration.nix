@@ -17,7 +17,7 @@
 
 
 
-  users.users.yourusername = {
+  users.users.install = {
     isNormalUser = true;
     shell = pkgs.zsh;
   };

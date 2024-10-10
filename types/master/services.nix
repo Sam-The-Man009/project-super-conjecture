@@ -14,9 +14,9 @@
   };
 
   services = {
-      xserver = {
+      wayland = {
         enable = true;
-        windowManager.awesome = {
+        windowManager.sway = {
           enable = true;
         };
       };

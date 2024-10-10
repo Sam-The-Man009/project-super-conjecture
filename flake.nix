@@ -14,23 +14,24 @@
     systemArchitecture = "x86_64-linux";
     pkgs = import nixpkgs { system = systemArchitecture; };
     lib = nixpkgs.lib;
-    config = import ./common.nix { inherit pkgs lib inputs; };
+    config = import ./common.nix { inherit pkgs lib outputs; };
 
     # Function to generate configuration for a specific system and its type
     generateConfig = system: config: {
       name = "${system.name}-${system.type}";
       value = lib.nixosSystem {
         system = system.Architecture;
-        extraSpecialArgs = {inherit inputs;};
+        # extraSpecialArgs = {inherit inputs;};
         modules = [
           (import ./types/${system.type}/imports.nix { inherit config pkgs inputs; })
 
-          (import ./types/${system.type}/home.nix { 
-            inherit config pkgs inputs; 
-            home = {
-              packages = [ pkgs.git pkgs.zsh ];
-            };
-          })
+          home-manager.nixosModules.home-manager
+
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.myUser = import ./types/${system.type}/home.nix { inherit config pkgs inputs; };
+          }
 
           ({ config, pkgs, ... }: {
             imports = [];

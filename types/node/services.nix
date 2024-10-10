@@ -16,7 +16,7 @@
   services = {
       xserver = {
         enable = true;
-        windowManager.awesome = {
+        windowManager.i3 = {
           enable = true;
         };
       };

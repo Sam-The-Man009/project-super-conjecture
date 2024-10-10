@@ -11,7 +11,7 @@
 
       peers = [
         {
-          publicKey = "ssh-ed25519 AAAA..."; # Your NixOS SSH public key
+          publicKey = "ssh-ed25519 somekey";
           endpoint = "ssh-server.example.com:22";
           allowedIPs = [ "0.0.0.0/0" "::/0" ];
         }
