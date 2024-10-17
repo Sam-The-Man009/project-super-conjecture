@@ -1,4 +1,7 @@
 {  pkgs, lib, ... }:
+let 
+  uuid = builtins.exec "zsh" "-c" "blkid -s UUID -o value /dev/sda1";
+in 
 {
   nixpkgs.config.allowUnfree = true;
   imports = [
@@ -14,9 +17,13 @@
   i18n.defaultLocale = "en_DK.UTF-8";
   console.keyMap = "dk-latin1";
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  
+  # Fetch the UUID of the root filesystem
+  
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/XXXX-XXXX";
+    device = "/dev/disk/by-uuid/${uuid}";
     fsType = "ext4";
   };
-  system.stateVersion = "23.05";
+  system.stateVersion = "24.11";
 }
