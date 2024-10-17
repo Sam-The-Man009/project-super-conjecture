@@ -10,7 +10,6 @@
     username = "user";
   };
 
-    home.packages = [ pkgs.git pkgs.zsh ];
 
     programs.zsh = {
       enable = true;
