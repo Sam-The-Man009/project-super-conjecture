@@ -16,6 +16,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/XXXX-XXXX";
-    fsType = "ext4";  # Change to your filesystem type
+    fsType = "ext4";
   };
+  system.stateVersion = "23.05";
 }
