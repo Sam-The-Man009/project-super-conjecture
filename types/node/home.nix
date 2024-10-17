@@ -1,5 +1,6 @@
 { pkgs, config, ... }: {
 
+
   homeManager.users.node = {
     home = {
     homeDirectory = "/home/node";
@@ -13,7 +14,7 @@
 
     programs.zsh = {
       enable = true;
-      sessionInit = "source ${config.home.homeDirectory}/.zshrc";
+      sessionInit = "source ${homeManager.users.node.home.homeDirectory}/.zshrc";
       
       aliases = {
         sys-rebuild = "sudo nixos-rebuild switch --flake /path/to/nixos-config";
