@@ -10,7 +10,7 @@
     
   };
 
-  outputs = { self, nixpkgs, home-manager, inputs, ... }: let
+  outputs = { self, nixpkgs, home-manager, ... }: let
     systemArchitecture = "x86_64-linux";
     pkgs = import nixpkgs { system = systemArchitecture; };
     lib = nixpkgs.lib;
@@ -21,7 +21,7 @@
       name = "${system.name}-${system.type}";
       value = lib.nixosSystem {
         system = system.Architecture;
-        # extraSpecialArgs = {inherit inputs;};
+
         modules = [
           (import ./types/${system.type}/imports.nix { inherit config pkgs; })
 
