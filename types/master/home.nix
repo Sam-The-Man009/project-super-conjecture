@@ -14,7 +14,7 @@
 
     programs.zsh = {
       enable = true;
-      sessionInit = "source ${homeManager.users.master.home.homeDirectory}/.zshrc";
+      sessionInit = "source ${home.homeDirectory}/.zshrc";
       
       aliases = {
         sys-rebuild = "sudo nixos-rebuild switch --flake /path/to/nixos-config";
