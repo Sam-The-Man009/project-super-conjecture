@@ -1,6 +1,6 @@
 {  pkgs, lib, ... }:
 let 
-  uuid = builtins.exec "bash" "-c" "blkid -s UUID -o value /dev/sda1";
+  uuid = builtins.exec "bash" "-c" "blkid -s UUID -o value \$(findmnt -n -o SOURCE /)";
 in 
 {
   nixpkgs.config.allowUnfree = true;
