@@ -35,7 +35,7 @@
 
           ({ config, pkgs, ... }: {
             imports = [];
-            hostname = "${system.name}";
+            #hostname = "${system.name}";
             networking.hostName = "${system.name}";
           })
         ];
