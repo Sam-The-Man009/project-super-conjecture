@@ -3,7 +3,7 @@
   nixpkgs.config.allowUnfree = true;
   imports = [
     ./bootloader.nix
-    ./users.nix { inherit pkgs; }
+    #./users.nix { inherit pkgs; }
     ./wireGuard.nix
     ./conjecture-utils.nix
   ];

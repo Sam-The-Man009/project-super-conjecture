@@ -1,15 +1,18 @@
 { pkgs, config, ... }: {
 
-
+homeManager.users.currentUser = let
+    homeDirectory = "/home/user";  
+  in {
   homeManager.users.node = {
     home = {
-    homeDirectory = "/home/node";
+    homeDirectory = homeDirectory;
     packages = [ 
       pkgs.git
       pkgs.zsh
     ];
     username = "node";
   };
+
 
 
     programs.zsh = {
@@ -23,14 +26,15 @@
     };
 
     # Ensure ~/.zshrc exists and set its properties
-    home.file.".zshrc" = {
-      text = ''
-        export EDITOR="nvim"
-        export PATH=$PATH:$HOME/.local/bin
-      '';
-      owner = "node";
-      group = "users";
-      mode = "0644"; 
-    };
+      home.file.".zshrc" = {
+        text = ''
+          export EDITOR="nvim"
+          export PATH=$PATH:$HOME/.local/bin
+        '';
+        owner = "node";
+        group = "users";
+        mode = "0644"; 
+      };
   };
+};
 }

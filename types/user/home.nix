@@ -1,6 +1,6 @@
 { pkgs, config, ... }: {
 
-  homeManager.users.node = let
+  homeManager.users.currentUser = let
     homeDirectory = "/home/user";  
   in {
     home = {

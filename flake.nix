@@ -25,12 +25,12 @@
         modules = [
           (import ./types/${system.type}/imports.nix { inherit config pkgs; })
 
-          home-manager.nixosModules.home-manager
+          #home-manager.nixosModules.home-manager
 
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.myUser = import ./types/${system.type}/home.nix { inherit config pkgs; };
+            #home-manager.useGlobalPkgs = true;
+            #home-manager.useUserPackages = true;
+            #home-manager.users.currentUser = import ./types/${system.type}/home.nix { inherit config pkgs; };
           }
 
           ({ config, pkgs, ... }: {
