@@ -28,7 +28,7 @@
         export EDITOR="nvim"
         export PATH=$PATH:$HOME/.local/bin
       '';
-      owner = "master";
+      owner = "node";
       group = "users";
       mode = "0644"; 
     };

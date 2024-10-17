@@ -1,20 +1,22 @@
 { pkgs, config, ... }: {
 
-  homeManager.users.user = {
+  homeManager.users.node = let
+    homeDirectory = "/home/user";  
+  in {
     home = {
-    homeDirectory = "/home/user";
-    packages = [ 
-      pkgs.git
-      pkgs.zsh
-    ];
-    username = "user";
-  };
+      homeDirectory = homeDirectory;  
+      packages = [ 
+        pkgs.git
+        pkgs.zsh
+      ];
+      username = "user";
+    };
 
 
     programs.zsh = {
       enable = true;
-      sessionInit = ''source ${homeManager.users.user.home.homeDirectory}//.zshrc'';
-      
+      sessionInit = ''source ${homeDirectory}/.zshrc'';
+
       aliases = {
         sys-rebuild = "sudo nixos-rebuild switch --flake /path/to/nixos-config";
         home-rebuild = "sudo home-manager switch --flake /path/to/home-manifest#denmarkWest";
@@ -27,7 +29,7 @@
         export EDITOR="nvim"
         export PATH=$PATH:$HOME/.local/bin
       '';
-      owner = "master";
+      owner = "user";
       group = "users";
       mode = "0644"; 
     };
