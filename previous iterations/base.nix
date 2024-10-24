@@ -1,32 +1,42 @@
 { config, pkgs, ... }:
 
 {
-  # Enable the GRUB bootloader with EFI support
-  boot.loader.grub.config = ''
-  if $SSH_CONNECTION; then
-    quiet_mode=0
-  else
-    quiet_mode=1
-  fi
-'';
+  
 
-  boot.loader.grub.config = "GRUB_TIMEOUT=0";
-  boot.loader.grub.quiet_mode = true;
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.efiSupport = true;
-  boot.loader.grub.efiInstallAsRemovable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.devices = [ "nodev" ]; #change the nodev
-  boot.loader.grub.useOSProber = true;
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = false;
+        # https://github.com/NixOS/nixpkgs/blob/c32c39d6f3b1fe6514598fa40ad2cf9ce22c3fb7/nixos/modules/system/boot/loader/systemd-boot/systemd-boot.nix#L66
+        editor = false;
+      };
+      timeout = 10;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
+      };
+      grub = {
+        enable = true;
+        device = "/dev/sda";
+        efiSupport = true;
+        useOSProber = true;
+        configurationLimit = 8;
+        theme =
+          pkgs.fetchFromGitHub
+          {
+            owner = "Lxtharia";
+            repo = "minegrub-theme";
+            rev = "193b3a7c3d432f8c6af10adfb465b781091f56b3";
+            sha256 = "1bvkfmjzbk7pfisvmyw5gjmcqj9dab7gwd5nmvi8gs4vk72bl2ap";
+          };
+      };
+    };
+  };
 
   # Basic system settings
-  system.stateVersion = "23.05"; 
+  system.stateVersion = "23.11"; 
   
-  networking.hostName = "Denmark-west";
-
-
- 
+  networking.hostName = "VM";
 
   # Define an option for the SSH port. yes this is how you define a local variable in nix. this language is a beautiful language.
   options = {
@@ -37,24 +47,11 @@
     };
   };
 
-  services.openssh = {
-    enable = true;
-    permitRootLogin = "no"; 
-    passwordAuthentication = true; 
-    port = config.ssh.port; 
-  };
-
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ config.ssh.port ]; 
-  };
-
- 
-
-
-  users.users.sys1-user = {
+  users.users.dio = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ]; # Enable sudo
+    shell = pkgs.zsh;
+    home = "/home/dio";
   };
 
  
@@ -80,25 +77,9 @@
     openssh
     gparted
     xgd-user-dirs
-
-    # megacomputer tooling
-    kubernetes
-    docker
-    docker-compose
-    ceph
-    ceph-client
-    prometheus
-    grafana
-    elk-stack
-
-
-    # nvidia bs
-    cuda
-    cudatoolkit
-    nvidia-xconfig
-    
-
-
+    librewolf
+    dmenu
+    alacritty
   ];
 
   services.xserver.enable = true;
